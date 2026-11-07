@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>AFC Medical Advisor — Haidir (085175237688)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        .wa-bg {
+            background-color: #efeae2;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        .wa-bubble {
+            background-color: #dcf8c6;
+            border: 1px solid #b7e49a;
+        }
+        .chip-active {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #14b8a6 !important;
+            box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.25);
+        }
+        .qa-btn-active {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #f59e0b !important;
+        }
+        .qa-recommended {
+            border-color: #f59e0b !important;
+            background-color: #fffbeb;
+        }
+        .nav-active {
+            background-color: #0d9488 !important;
+            color: #ffffff !important;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-16 md:pb-10">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-4 right-4 z-50 hidden max-w-sm bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-teal-400/40 flex items-center gap-3 transition-all duration-300">
+        <div class="w-8 h-8 rounded-full bg-teal-500/20 text-teal-300 flex items-center justify-center font-extrabold flex-shrink-0">✓</div>
+        <div>
+            <div id="toast-title" class="text-xs font-extrabold uppercase tracking-wider text-teal-300">Tersalin!</div>
+            <div id="toast-desc" class="text-xs text-slate-200 mt-0.5">Siap ditempel (Paste) di WhatsApp pasien.</div>
+        </div>
+    </div>
+
+    <!-- HEADER & PERSONALIZER BAR -->
+    <header class="bg-slate-900 text-white sticky top-0 z-40 border-b border-slate-800 shadow-md">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-600 text-slate-950 font-extrabold text-xs flex items-center justify-center shadow">
+                        AFC
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-sm sm:text-base font-extrabold tracking-tight">AFC Medical Advisor — Haidir</h1>
+                            <span class="hidden sm:inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-400/30">085175237688</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Asisten Konsultasi Medis WhatsApp • Ringkas, Ilmiah & Meyakinkan</p>
+                    </div>
+                </div>
+
+                <!-- View Switcher -->
+                <div class="flex items-center gap-1.5 bg-slate-800 p-1 rounded-xl border border-slate-700">
+                    <button type="button" id="btn-view-main" onclick="switchView('main')" class="nav-active px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-200">
+                        💬 Meja Konsultasi WA
+                    </button>
+                    <button type="button" id="btn-view-ref" onclick="switchView('ref')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-300 hover:text-white">
+                        🧮 Kalkulator & 21 Paten
+                    </button>
+                </div>
+            </div>
+
+            <!-- PERSONALIZER INPUTS -->
+            <div class="mt-2.5 pt-2.5 border-t border-slate-800 grid grid-cols-2 sm:grid-cols-12 gap-2 items-center">
+                <div class="col-span-1 sm:col-span-2">
+                    <label class="block text-[10px] uppercase font-bold text-slate-400">Sapaan</label>
+                    <select id="inp-salutation" onchange="updateAll()" class="mt-0.5 w-full bg-slate-800 text-white text-xs font-semibold rounded-lg px-2.5 py-1.5 border border-slate-700 focus:outline-none focus:border-teal-400">
+                        <option value="Bapak/Ibu">Bapak/Ibu</option>
+                        <option value="Bapak">Bapak</option>
+                        <option value="Ibu">Ibu</option>
+                        <option value="Kak">Kak</option>
+                        <option value="Dok">Dok</option>
+                    </select>
+                </div>
+                <div class="col-span-1 sm:col-span-3">
+                    <label class="block text-[10px] uppercase font-bold text-slate-400">Nama Pasien (Opsional)</label>
+                    <input id="inp-name" type="text" oninput="updateAll()" placeholder="Contoh: Budi / Hj. Aminah" class="mt-0.5 w-full bg-slate-800 text-white text-xs rounded-lg px-2.5 py-1.5 border border-slate-700 focus:outline-none focus:border-teal-400 placeholder-slate-500">
+                </div>
+                <div class="col-span-1 sm:col-span-3">
+                    <label class="block text-[10px] uppercase font-bold text-slate-400">No. WA Pasien (Opsional)</label>
+                    <input id="inp-phone" type="tel" placeholder="0812xxxx (Kirim 1-Klik)" class="mt-0.5 w-full bg-slate-800 text-white text-xs rounded-lg px-2.5 py-1.5 border border-slate-700 focus:outline-none focus:border-teal-400 placeholder-slate-500">
+                </div>
+                <div class="col-span-1 sm:col-span-4 flex items-center justify-between sm:justify-end gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <div>
+                        <div class="text-[10px] font-bold uppercase text-amber-300">Skema Harga Resmi</div>
+                        <div id="price-mode-text" class="text-[11px] font-semibold text-slate-200">Harga Saat Ini (Sblm 14 Des)</div>
+                    </div>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="inp-price-dec" onchange="updateAll()" class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-600 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative peer-checked:bg-amber-500"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 flex-1">
+
+        <!-- =============================================================== -->
+        <!-- VIEW 1: MEJA KONSULTASI WHATSAPP (CORE WORKFLOW)                -->
+        <!-- =============================================================== -->
+        <div id="view-main" class="space-y-5">
+
+            <!-- STEP 1: PASTE KELUHAN PASIEN & CHIP GEJALA CEPAT -->
+            <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3.5">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-900">Langkah 1 • Input Keluhan Pasien</span>
+                        <h2 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">Paste Chat WA Pasien atau Klik Cepat Keluhannya</h2>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button type="button" onclick="loadSample(1)" class="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Contoh: Diabetes + Kebas</button>
+                        <button type="button" onclick="loadSample(2)" class="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Contoh: Ginjal + Tensi + Gula</button>
+                        <button type="button" onclick="loadSample(3)" class="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Contoh: Pasca-Stroke</button>
+                        <button type="button" onclick="loadSample(4)" class="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Contoh: Hepatitis B</button>
+                        <button type="button" onclick="resetInput()" class="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition">Bersihkan</button>
+                    </div>
+                </div>
+
+                <div>
+                    <textarea id="complaint-input" rows="3" oninput="updateAll()" placeholder="Paste chat WA pasien atau ketik keluhannya di sini... (Misal: Gula darah 300, kaki sering kesemutan dan badan lemas, sudah minum metformin)" class="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-xs sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                </div>
+
+                <!-- Quick Symptom Chips -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-600">Atau tap cepat untuk menggabungkan beberapa keluhan:</span>
+                        <span id="detected-count-badge" class="text-[11px] font-extrabold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">1 Kondisi Aktif</span>
+                    </div>
+                    <div id="symptom-chips" class="flex flex-wrap gap-1.5"></div>
+                </div>
+
+                <!-- Summary Bar of Detected Conditions & Products -->
+                <div class="bg-slate-900 text-white px-3.5 py-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div id="detected-summary" class="flex flex-wrap items-center gap-1.5"></div>
+                    <div id="product-summary" class="flex flex-wrap items-center gap-1.5"></div>
+                </div>
+            </section>
+
+            <!-- STEP 2: RESPON PING-PONG WHATSAPP (CARD 1 & CARD 2 SIDE BY SIDE) -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+                <!-- CARD 1: RESPON PEMBUKA (RAMAH, PENDEK, PADAT, VALIDASI + TANYA SINGKAT) -->
+                <div class="lg:col-span-5 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">Chat 1 • Pembuka Singkat</span>
+                            <span id="meta-card-1" class="text-[11px] font-semibold text-slate-500">3 Paragraf Pendek</span>
+                        </div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">1. Respon Ramah, Pendek & To-The-Point</h3>
+                        <p class="text-xs text-slate-500">Merujuk langsung pada keluhan pasien, mengingatkan agar obat dokter tidak dihentikan mendadak, menjelaskan akar masalah secara singkat, dan diakhiri 1 pertanyaan ringan agar pasien membalas.</p>
+                    </div>
+
+                    <div class="wa-bg p-3 rounded-xl border border-slate-200 flex-1 flex flex-col">
+                        <textarea id="out-card-1" rows="9" oninput="updateCounter('out-card-1', 'meta-card-1')" class="w-full flex-1 wa-bubble p-3 rounded-lg text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-teal-600 resize-y"></textarea>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-1">
+                        <button type="button" onclick="copyTextById('out-card-1', 'Balasan Pembuka Tersalin!')" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition shadow">
+                            📋 Salin Chat Pembuka
+                        </button>
+                        <button type="button" onclick="sendWaById('out-card-1')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition shadow">
+                            📲 Kirim ke WA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CARD 2: SARAN PRODUK & PENJELASAN MEDIS SINGKAT (ILMIAH TANPA NOMOR PATEN) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 border-2 border-teal-600 shadow-sm flex flex-col justify-between space-y-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-900 border border-teal-300">Chat 2 • Rekomendasi Medis (Tanpa Kode Paten)</span>
+                            <span id="meta-card-2" class="text-[11px] font-semibold text-teal-700">Ilmiah & Mudah Dipahami</span>
+                        </div>
+                        <h3 class="text-sm sm:text-base font-extrabold text-slate-900">2. Saran Produk & Cara Kerja Medis Singkat</h3>
+                        <p class="text-xs text-slate-500">Menjelaskan produk yang tepat dan mekanisme perbaikan selnya secara medis dan profesional (tanpa menampilkan kode nomor paten yang membingungkan awam), lengkap dengan aturan minum.</p>
+                    </div>
+
+                    <div class="wa-bg p-3 rounded-xl border border-slate-200 flex-1 flex flex-col">
+                        <textarea id="out-card-2" rows="10" oninput="updateCounter('out-card-2', 'meta-card-2')" class="w-full flex-1 wa-bubble p-3 rounded-lg text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-teal-600 resize-y"></textarea>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-1">
+                        <button type="button" onclick="copyTextById('out-card-2', 'Saran Produk Medis Tersalin!')" class="flex-1 bg-teal-700 hover:bg-teal-600 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition shadow">
+                            📋 Salin Saran Produk
+                        </button>
+                        <button type="button" onclick="sendWaById('out-card-2')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition shadow">
+                            📲 Kirim ke WA
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- STEP 3: ANTISIPASI PERTANYAAN & KEBERATAN PASIEN -->
+            <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">Langkah 3 • Antisipasi Pertanyaan Lanjutan</span>
+                        <h2 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">3. Jawaban Logis untuk Pertanyaan & Keberatan Pasien</h2>
+                        <p class="text-xs text-slate-500">Pertanyaan dengan tanda <span class="font-bold text-amber-700">★ Disarankan</span> otomatis disorot sesuai keluhan pasien di atas. Klik salah satu pertanyaan untuk mengambil jawabannya:</p>
+                    </div>
+                    <span id="meta-card-3" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Siap Kirim WA</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                    <!-- Left: Question Selector Buttons -->
+                    <div id="qa-buttons-list" class="lg:col-span-5 grid grid-cols-1 gap-2"></div>
+
+                    <!-- Right: Selected Answer Preview & Action -->
+                    <div class="lg:col-span-7 bg-slate-50 rounded-2xl p-3.5 sm:p-4 border border-slate-200 space-y-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <div id="qa-active-badge" class="text-[10px] font-extrabold uppercase text-teal-700 tracking-wider">LOGIKA MEDIS & PSIKOLOGIS</div>
+                                <h4 id="qa-active-title" class="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5"></h4>
+                                <p id="qa-active-hint" class="text-xs text-slate-600 mt-1"></p>
+                            </div>
+                        </div>
+
+                        <div class="wa-bg p-3 rounded-xl border border-slate-200">
+                            <textarea id="out-card-3" rows="9" oninput="updateCounter('out-card-3', 'meta-card-3')" class="w-full wa-bubble p-3 rounded-lg text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:outline-none focus:ring-2 focus:ring-teal-600 resize-y"></textarea>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="copyTextById('out-card-3', 'Jawaban Antisipasi Tersalin!')" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition shadow">
+                                📋 Salin Jawaban Ini ke WA
+                            </button>
+                            <button type="button" onclick="sendWaById('out-card-3')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition shadow">
+                                📲 Kirim ke WA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- VIEW 2: KALKULATOR PAKET & REFERENSI 21 PATEN (INTERNAL)        -->
+        <!-- =============================================================== -->
+        <div id="view-ref" class="hidden space-y-6">
+            <!-- Calculator Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-4">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-900">Kalkulator Paket & Keanggotaan</span>
+                        <h2 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">Simulasi Eceran vs Reseller (2 Box) / Agen (6 Box)</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <button type="button" onclick="setCalc(1,0,0)" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:border-teal-500 text-left">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase">Eceran</div>
+                            <div class="text-xs font-extrabold">1 Box Subarashi</div>
+                        </button>
+                        <button type="button" onclick="setCalc(1,1,0)" class="p-2.5 rounded-xl border-2 border-teal-500 bg-teal-50/40 text-left">
+                            <div class="text-[10px] font-extrabold text-teal-700 uppercase">★ Reseller (2)</div>
+                            <div class="text-xs font-extrabold">1 Suba + 1 Utsu</div>
+                        </button>
+                        <button type="button" onclick="setCalc(2,0,0)" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:border-teal-500 text-left">
+                            <div class="text-[10px] font-bold text-teal-700 uppercase">★ Reseller (2)</div>
+                            <div class="text-xs font-extrabold">2 Box Subarashi</div>
+                        </button>
+                        <button type="button" onclick="setCalc(4,2,0)" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:border-teal-500 text-left">
+                            <div class="text-[10px] font-bold text-indigo-700 uppercase">💎 Agen (6)</div>
+                            <div class="text-xs font-extrabold">Terapi 90 Hari</div>
+                        </button>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <div class="p-3 rounded-xl border border-blue-200 bg-blue-50/40 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-extrabold">🟦 SOP Subarashi Gold (28 Sachet)</div>
+                                <div class="text-[11px] text-slate-600">Rp 2.000.000 (Naik Rp 2.050.000 per 14 Des 2026)</div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="chgBox('suba', -1)" class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-bold">-</button>
+                                <input id="q-suba" type="number" min="0" value="1" oninput="renderCalc()" class="w-11 text-center text-xs font-extrabold py-1 rounded-lg border border-slate-300 bg-white">
+                                <button type="button" onclick="chgBox('suba', 1)" class="w-7 h-7 rounded-lg bg-slate-900 text-white font-bold">+</button>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl border border-purple-200 bg-purple-50/40 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-extrabold">🟪 Utsukushhii Gold (28 Sachet)</div>
+                                <div class="text-[11px] text-slate-600">Rp 1.850.000 (Naik Rp 1.900.000 per 14 Des 2026)</div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="chgBox('utsu', -1)" class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-bold">-</button>
+                                <input id="q-utsu" type="number" min="0" value="1" oninput="renderCalc()" class="w-11 text-center text-xs font-extrabold py-1 rounded-lg border border-slate-300 bg-white">
+                                <button type="button" onclick="chgBox('utsu', 1)" class="w-7 h-7 rounded-lg bg-slate-900 text-white font-bold">+</button>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl border border-amber-200 bg-amber-50/40 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-extrabold">🟨 AFC Hikari (30 Sachet)</div>
+                                <div class="text-[11px] text-slate-600">Rp 1.800.000 (Harga Tetap)</div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="chgBox('hika', -1)" class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-bold">-</button>
+                                <input id="q-hika" type="number" min="0" value="0" oninput="renderCalc()" class="w-11 text-center text-xs font-extrabold py-1 rounded-lg border border-slate-300 bg-white">
+                                <button type="button" onclick="chgBox('hika', 1)" class="w-7 h-7 rounded-lg bg-slate-900 text-white font-bold">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                        <span class="text-xs font-bold text-slate-700">Takaran Konsumsi Harian:</span>
+                        <select id="q-dose" onchange="renderCalc()" class="rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-bold bg-slate-50">
+                            <option value="1">1 Sachet / Hari</option>
+                            <option value="2" selected>2 Sachet / Hari (Pagi & Sore)</option>
+                            <option value="3">3 Sachet / Hari</option>
+                            <option value="4">4 Sachet / Hari (Intensif)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900">Format Penawaran Harga WA</span>
+                        <h3 class="text-base font-extrabold text-slate-900 mt-1">Naskah Rincian Paket & Pengiriman COD</h3>
+                    </div>
+                    <div class="wa-bg p-3 rounded-xl border border-slate-200 flex-1 flex flex-col">
+                        <textarea id="out-calc" rows="10" class="w-full flex-1 wa-bubble p-3 rounded-lg text-xs text-slate-900 leading-relaxed focus:outline-none"></textarea>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copyTextById('out-calc', 'Rincian Paket Tersalin!')" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition">📋 Salin Rincian Paket</button>
+                        <button type="button" onclick="sendWaById('out-calc')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold py-3 px-4 rounded-xl transition">📲 Kirim WA</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reference Table of 21 Patents (Only when a critical patient/doctor asks for proof) -->
+            <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900">Arsip Referensi Internal Haidir</span>
+                        <h3 class="text-base font-extrabold text-slate-900 mt-1">Daftar 21 Nomor Paten Resmi (Khusus Jika Pasien Meminta Bukti Kode Paten)</h3>
+                    </div>
+                    <input id="ref-search" type="text" oninput="renderPatentTable()" placeholder="Cari paten / kandungan..." class="rounded-xl border border-slate-300 px-3 py-1.5 text-xs w-full sm:w-64">
+                </div>
+                <div id="patent-ref-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- APPLICATION DATA & LOGIC (ZERO-ERROR VANILLA JS)                    -->
+    <!-- =================================================================== -->
+    <script>
+        // 1. DATABASE KONDISI KLINIS (ILMIAH, RINGKAS, TANPA KODE PATEN DI TEKS PASIEN)
+        const CONDITIONS = [
+            {
+                id: 'diabetes',
+                chip: '🩸 Diabetes / Gula Darah',
+                label: 'Diabetes / Gula Darah Tinggi',
+                keywords: ['diabetes', 'gula', 'kencing manis', 'metformin', 'glimepiride', 'insulin', 'hba1c', 'kencing malam', 'mudah haus', 'luka'],
+                products: ['SUBARASHI'],
+                companion: ['HIKARI'],
+                openingFocus: 'kadar gula darah yang tinggi',
+                rootCauseBrief: 'obat penurun gula dari dokter sangat penting untuk menahan lonjakan gula harian, namun belum memperbaiki sel Beta Pankreas yang kelelahan menghasilkan insulin serta dinding pembuluh darah yang mulai kaku terkena gula.',
+                followUpQuestion: 'Kalau boleh tahu, berapa angka gula darah terakhirnya dan saat ini rutin minum obat apa dari dokter?',
+                productMechanism: '• *SOP Subarashi Gold (Nutrisi Utama):* Mengandung *Bioactive Marine Oligopeptide* berukuran nano yang bekerja meregenerasi sel Beta Pankreas yang melemah agar tubuh kembali peka mengolah gula secara alami. Selain itu, kandungan *Fruitflow* vegan peptide-nya menjaga darah kental manis tetap encer alami serta melindungi organ hati dan ginjal dari beban residu obat jangka panjang.',
+                recommendedQaIds: ['qa_tetap_obat', 'qa_dokter_aman', 'qa_harga_mahal', 'qa_waktu_hasil']
+            },
+            {
+                id: 'saraf_kebas',
+                chip: '⚡ Kaki Kebas / Kesemutan / Saraf',
+                label: 'Neuropati / Kebas & Kesemutan Saraf Tepi',
+                keywords: ['kebas', 'kesemutan', 'baal', 'tebal', 'terbakar', 'nyeri saraf', 'saraf kejepit', 'neuropati', 'gemetar'],
+                products: ['SUBARASHI', 'HIKARI'],
+                companion: [],
+                openingFocus: 'keluhan kebas dan kesemutan pada saraf',
+                rootCauseBrief: 'rasa kebas atau kesemutan merupakan sinyal medis bahwa aliran darah mikro ke ujung saraf mulai tersendat dan selaput pelindung saraf tepi mengalami peradangan.',
+                followUpQuestion: 'Apakah kebas/kesemutannya terasa terus-menerus setiap hari, dan apakah disertai riwayat gula darah atau kolesterol tinggi?',
+                productMechanism: '• *SOP Subarashi Gold:* Melancarkan sirkulasi pembuluh darah kapiler terkecil sehingga suplai oksigen dan nutrisi bisa kembali menjangkau ujung-ujung jari tangan dan kaki.\n• *AFC Hikari:* Mengandung ekstrak *Spearmint & Mango Leaf Peptide* yang secara klinis merangsang *neurogenesis* (perbaikan dan pertumbuhan kembali jaringan sel saraf yang rusak/terputus) sehingga rasa baal berangsur pulih.',
+                recommendedQaIds: ['qa_waktu_hasil', 'qa_harga_mahal', 'qa_beda_apotek']
+            },
+            {
+                id: 'ginjal',
+                chip: '🫘 Gagal Ginjal / Kreatinin Tinggi',
+                label: 'Penurunan Fungsi Ginjal / Kreatinin & Ureum Tinggi',
+                keywords: ['ginjal', 'kreatinin', 'ureum', 'cuci darah', 'hemodialisa', 'hemodialisis', 'egfr', 'bengkak', 'berbusa', 'proteinuria'],
+                products: ['SUBARASHI'],
+                companion: ['UTSUKUSHHII'],
+                openingFocus: 'penurunan fungsi saringan ginjal (tingginya kadar kreatinin/ureum)',
+                rootCauseBrief: 'ketika saringan halus ginjal (nefron) meradang, ginjal kesulitan membuang racun metabolik dan sangat rentan mengalami kerusakan lebih lanjut jika aliran darah mikro di ginjal kaku.',
+                followUpQuestion: 'Saat ini apakah masih terapi obat rawat jalan atau sudah dijadwalkan cuci darah oleh dokter, serta berapa angka kreatinin terakhirnya?',
+                productMechanism: '• *SOP Subarashi Gold (Nutrisi Utama):* Menggunakan peptida murni dengan berat molekul sangat rendah yang langsung diserap sel tanpa memperberat kerja saringan ginjal. Berfungsi memperbaiki sirkulasi pembuluh darah halus di ginjal, menstabilkan tensi pemicu kerusakan ginjal, dan menjaga sisa sel nefron yang masih sehat agar tidak ikut rusak.\n• *Utsukushhii Gold (Pendamping Detoks):* Mengandung bakteri asam laktat *Enterococcus faecalis* khusus yang secara klinis membantu mengikat zat racun di saluran cerna dan darah (mengurangi beban toksisitas ginjal).',
+                recommendedQaIds: ['qa_aman_ginjal', 'qa_tetap_obat', 'qa_harga_mahal', 'qa_waktu_hasil']
+            },
+            {
+                id: 'hipertensi',
+                chip: '💓 Hipertensi / Tensi & Jantung',
+                label: 'Hipertensi (Darah Tinggi) & Sirkulasi Jantung',
+                keywords: ['hipertensi', 'tensi', 'darah tinggi', 'amlodipine', 'candesartan', 'jantung', 'berdebar', 'sesak', 'nyeri dada', 'pasang ring', 'tengkuk'],
+                products: ['SUBARASHI'],
+                companion: [],
+                openingFocus: 'tekanan darah tinggi (hipertensi) dan beban kerja jantung',
+                rootCauseBrief: 'obat penurun tensi bekerja melebarkan pembuluh darah sementara waktu, namun dinding pembuluh darah yang kaku dan darah yang cenderung kental tetap perlu diperbaiki elastisitasnya agar tidak memicu penyumbatan jantung atau stroke.',
+                followUpQuestion: 'Berapa rata-rata angka tensinya saat ini, dan apakah sering disertai keluhan tengkuk berat atau mudah lelah?',
+                productMechanism: '• *SOP Subarashi Gold:* Menggabungkan *Sardine Peptide*, *Marine Placenta*, dan *Fruitflow* yang bekerja secara alami menghambat enzim pemicu penyempitan pembuluh darah (ACE), mengembalikan kelenturan dinding pembuluh darah, serta mencegah keping darah (trombosit) saling menggumpal tanpa membuat iritasi lambung.',
+                recommendedQaIds: ['qa_tetap_obat', 'qa_dokter_aman', 'qa_harga_mahal', 'qa_beda_apotek']
+            },
+            {
+                id: 'stroke',
+                chip: '🧠 Pasca-Stroke / Lemas Sebelah',
+                label: 'Pemulihan Pasca-Stroke & Saraf Motorik',
+                keywords: ['stroke', 'struk', 'lumpuh', 'lemas sebelah', 'pelo', 'cadel', 'penyumbatan otak', 'pecah pembuluh'],
+                products: ['SUBARASHI', 'HIKARI'],
+                companion: [],
+                openingFocus: 'pemulihan fungsi gerak dan saraf pasca-stroke',
+                rootCauseBrief: 'dalam masa pemulihan pasca-stroke, ada dua hal yang harus diperbaiki bersamaan: melancarkan kembali suplai darah/oksigen ke area otak yang terdampak dan menyambung sel-sel saraf motorik yang sempat terputus.',
+                followUpQuestion: 'Serangan strokenya sudah berlangsung berapa lama, dan bagian gerak mana yang saat ini paling terasa lemas atau sulit digerakkan?',
+                productMechanism: '• *SOP Subarashi Gold:* Membantu melancarkan aliran darah mikro ke jaringan otak, menjaga kelenturan pembuluh darah, dan mencegah terbentuknya gumpalan darah baru (mencegah serangan stroke berulang).\n• *AFC Hikari:* Bekerja khusus pada sistem saraf pusat dengan menstimulasi *neurogenesis* (pembentukan sel neuron baru di otak) untuk mempercepat pemulihan gerak tangan/kaki, keseimbangan, dan kemampuan bicara.',
+                recommendedQaIds: ['qa_harga_mahal', 'qa_waktu_hasil', 'qa_tetap_obat', 'qa_rincian_paket']
+            },
+            {
+                id: 'hepatitis',
+                chip: '🛡️ Hepatitis B / Liver (SGOT-SGPT)',
+                label: 'Hepatitis B / C & Peradangan Fungsi Hati (Liver)',
+                keywords: ['hepatitis', 'hbv', 'hbsag', 'liver', 'hati', 'sgot', 'sgpt', 'sirosis', 'perlemakan hati', 'fatty liver', 'kuning', 'tenofovir'],
+                products: ['UTSUKUSHHII', 'SUBARASHI'],
+                companion: [],
+                openingFocus: 'kesehatan organ hati (liver) dan penanganan virus Hepatitis',
+                rootCauseBrief: 'pada kasus Hepatitis atau peningkatan SGOT/SGPT, virus yang bersembunyi di sel hati memicu peradangan menahun yang jika dibiarkan dapat menyebabkan jaringan hati mengeras (sirosis) dan membuat tubuh mudah lemas.',
+                followUpQuestion: 'Kalau boleh tahu, berapa angka SGOT/SGPT terakhirnya dan apakah saat ini sedang rutin mengonsumsi obat antivirus dari dokter?',
+                productMechanism: '• *Utsukushhii Gold:* Mengandung 1 Triliun bakteri probiotik *FK-23*, *Fucoidan*, dan *Black Garlic* yang mengaktifkan sel imun pembunuh alami (*Natural Killer / NK Cells*) untuk menekan keaktifan virus di sel hati sekaligus mencegah pertumbuhan sel abnormal/tumor hati.\n• *SOP Subarashi Gold:* Memiliki fungsi *hepatoprotective* (pelindung hati) dan regenerasi sel untuk mempercepat pergantian sel-sel hati yang rusak dengan jaringan hati baru yang sehat sehingga kadar SGOT/SGPT berangsur turun.',
+                recommendedQaIds: ['qa_hepatitis_b', 'qa_tetap_obat', 'qa_waktu_hasil', 'qa_harga_mahal']
+            },
+            {
+                id: 'tumor_kanker',
+                chip: '🎗️ Kista / Miom / Tumor / Kanker',
+                label: 'Kista, Miom, Benjolan Tumor & Pendamping Kemoterapi',
+                keywords: ['kista', 'miom', 'tumor', 'kanker', 'benjolan', 'payudara', 'serviks', 'kemoterapi', 'kemo', 'radioterapi', 'leukosit'],
+                products: ['UTSUKUSHHII'],
+                companion: ['SUBARASHI'],
+                openingFocus: 'penanganan sel abnormal (kista/miom/tumor) dan penguatan imunitas seluler',
+                rootCauseBrief: 'sel benjolan atau tumor dapat berkembang ketika pasukan imun pengawas tubuh—yaitu *Natural Killer (NK) Cells*—mengalami penurunan jumlah dan keaktifan dalam menghancurkan sel abnormal.',
+                followUpQuestion: 'Keluhan benjolan/kistanya berada di bagian mana, dan apakah saat ini sedang dalam observasi dokter atau menjalani program terapi medis/kemoterapi?',
+                productMechanism: '• *Utsukushhii Gold (Nutrisi Utama):* Diformulasikan khusus dengan konsentrat *Lactic Acid Bacteria FK-23*, *Takara Kombu Fucoidan* Jepang, dan *Black Garlic* yang secara klinis mengaktifkan kembali *NK Cells* untuk mendeteksi dan menekan pembelahan sel tumor/kista dari dalam, sekaligus menjaga jumlah sel darah putih (leukosit) dan mengurangi efek mual/toksik bagi pasien yang menjalani kemoterapi.\n• *SOP Subarashi Gold (Pendamping):* Membantu memulihkan stamina seluler dan melindungi organ hati serta ginjal.',
+                recommendedQaIds: ['qa_waktu_hasil', 'qa_harga_mahal', 'qa_beda_apotek', 'qa_rincian_paket']
+            },
+            {
+                id: 'asam_urat',
+                chip: '🦴 Asam Urat / Nyeri Sendi Lutut',
+                label: 'Asam Urat Tinggi (Gout), Kolesterol & Nyeri Sendi',
+                keywords: ['asam urat', 'gout', 'sendi', 'lutut', 'rematik', 'pengapuran', 'osteoarthritis', 'kolesterol', 'nyeri sendi', 'bengkak sendi'],
+                products: ['SUBARASHI'],
+                companion: [],
+                openingFocus: 'keluhan nyeri sendi dan tingginya kadar asam urat/kolesterol',
+                rootCauseBrief: 'nyeri sendi yang berulang terjadi akibat penumpukan kristal purin (asam urat) di celah sendi serta menipisnya bantalan kolagen tulang rawan seiring usia.',
+                followUpQuestion: 'Sendi bagian mana yang paling sering terasa nyeri atau kaku, dan berapa angka asam urat terakhirnya saat cek darah?',
+                productMechanism: '• *SOP Subarashi Gold:* Mengandung *Salmon Anserine Peptide* yang bekerja menghambat pembentukan asam urat berlebih di dalam darah dan membantu peluruhan kristal purin melalui ginjal. Di saat yang sama, kandungan *Marine Placenta & Caviar Peptide*-nya merangsang regenerasi kolagen dan elastin alami pada bantalan sendi.',
+                recommendedQaIds: ['qa_waktu_hasil', 'qa_tetap_obat', 'qa_harga_mahal']
+            },
+            {
+                id: 'mata',
+                chip: '👁️ Mata Kabur / Katarak / Minus',
+                label: 'Penurunan Penglihatan, Mata Kabur, Katarak & Retinopati',
+                keywords: ['mata', 'kabur', 'buram', 'katarak', 'glaukoma', 'retinopati', 'minus', 'silinder', 'rabun', 'silau'],
+                products: ['HIKARI'],
+                companion: ['SUBARASHI'],
+                openingFocus: 'keluhan pandangan mata yang mulai kabur/berkabut',
+                rootCauseBrief: 'penurunan ketajaman penglihatan umumnya dipicu oleh kerusakan oksidatif pada makula retina mata serta melemahnya suplai oksigen pada pembuluh darah mikro di belakang bola mata.',
+                followUpQuestion: 'Pandangan kaburnya sudah berlangsung berapa lama, dan apakah ada riwayat gula darah tinggi (diabetes) atau katarak dari pemeriksaan dokter mata?',
+                productMechanism: '• *AFC Hikari (Nutrisi Utama Mata & Saraf):* Mengandung ekstrak *Marigold Peptide (Lutein & Zeaxanthin murni)* yang langsung diserap oleh makula retina untuk menjernihkan ketajaman visual, melindungi saraf mata dari radiasi cahaya biru, dan menghambat perburukan katarak/rabun.\n• *SOP Subarashi Gold (Jika ada Diabetes/Tensi):* Memperbaiki pembuluh darah mikro yang menyuplai nutrisi ke retina mata.',
+                recommendedQaIds: ['qa_waktu_hasil', 'qa_harga_mahal', 'qa_rincian_paket']
+            },
+            {
+                id: 'pencernaan',
+                chip: '🌿 Maag Kronis / GERD / Usus & Autoimun',
+                label: 'Gangguan Pencernaan (GERD/Maag Kronis), Detoks Usus & Autoimun',
+                keywords: ['maag', 'gerd', 'asam lambung', 'usus', 'sembelit', 'bab', 'autoimun', 'alergi', 'psoriasis', 'eksim'],
+                products: ['UTSUKUSHHII'],
+                companion: ['SUBARASHI'],
+                openingFocus: 'masalah saluran pencernaan (lambung/usus) dan keseimbangan imun tubuh',
+                rootCauseBrief: 'sekitar 70% sistem kekebalan tubuh berpusat di saluran cerna; ketika mukosa lambung dan mikrobioma usus meradang, penyerapan nutrisi terganggu dan respons imun menjadi mudah reaktif.',
+                followUpQuestion: 'Apakah keluhan yang paling sering muncul berupa perih/kembung naik ke dada (GERD), gangguan BAB, atau reaksi alergi/autoimun?',
+                productMechanism: '• *Utsukushhii Gold:* Mengandung *Triple Probiotic* tahan asam lambung, prebiotik rumput laut *Kombu Fucoidan*, ekstrak nanas (*Bromelain*), dan *Salmon DNA* yang bekerja membersihkan kerak toksin di dinding usus, meredakan peradangan mukosa lambung, serta menyeimbangkan kembali sistem imun tubuh.',
+                recommendedQaIds: ['qa_waktu_hasil', 'qa_beda_apotek', 'qa_harga_mahal']
+            },
+            {
+                id: 'anak_abk',
+                chip: '🧒 Anak Speech Delay / Autisme / Fokus Otak',
+                label: 'Terapi Saraf Otak Anak (Speech Delay/Autisme/ADHD) & Daya Ingat',
+                keywords: ['speech delay', 'telat bicara', 'autis', 'autisme', 'adhd', 'hiperaktif', 'tantrum', 'fokus belajar', 'pikun', 'demensia', 'alzheimer', 'vertigo'],
+                products: ['HIKARI'],
+                companion: ['UTSUKUSHHII'],
+                openingFocus: 'optimalisasi koneksi saraf otak, fokus, dan kemampuan komunikasi/memori',
+                rootCauseBrief: 'keterlambatan bicara (*speech delay*), kurang fokus, maupun penurunan memori berkaitan erat dengan kecepatan sambungan sinyal antar sel saraf (sinapsis) di area *Hippocampus* otak.',
+                followUpQuestion: 'Saat ini usia berapa tahun, dan perkembangan apa yang paling ingin difokuskan untuk dibantu (apakah kosakata bicara, kontak mata/fokus, atau daya ingat)?',
+                productMechanism: '• *AFC Hikari (100% Vegan Peptide):* Mengandung *Spearmint Peptide* dan *Mango Leaf Peptide* yang bekerja menembus sawar darah otak untuk memicu *neurogenesis* (pertumbuhan sel neuron baru) dan mengoptimalkan gelombang fokus otak tanpa efek samping gelisah, ditambah rasa buah alami yang sangat disukai anak-anak.',
+                recommendedQaIds: ['qa_waktu_hasil', 'qa_beda_apotek', 'qa_rincian_paket']
+            }
+        ];
+
+        // 2. DATABASE 8 ANTISIPASI PERTANYAAN & KEBERATAN PASIEN (LOGIS, MEDIS, MEYAKINKAN)
+        const ANTICIPATED_QA = [
+            {
+                id: 'qa_tetap_obat',
+                shortBtn: '1. "Percuma beli mahal kalau tetap harus minum obat dokter?"',
+                title: 'Menjawab: "Percuma dong beli mahal-mahal kalau tetap minum obat dokter?"',
+                hint: 'Gunakan analogi "Perahu Bocor": Obat dokter menguras air hari ini, nutrisi AFC menambal kebocoran selnya agar ke depan tidak ketergantungan obat seumur hidup.',
+                generate: function(s, name) {
+                    return `Justru sebaliknya ${s}${name}. Kalau ${s} *hanya* minum obat penurun gejala saja tanpa memperbaiki sel organ yang rusak, artinya ${s} harus siap bergantung pada obat tersebut seumur hidup dengan dosis yang biasanya makin lama makin bertambah.\n\nSecara medis, kondisi ini ibarat *Perahu yang Sedang Bocor*:\n• *Obat dokter* tugasnya *menguras air yang masuk* supaya perahu tidak tenggelam hari ini (menjaga tensi/gula tidak melonjak tiba-tiba). Karena itu obat dokter tidak boleh dilepas mendadak.\n• Sedangkan *Nutrisi Peptida AFC* tugasnya *menambal lubang bocornya* (memperbaiki sel pankreas, pembuluh darah, hati, atau ginjal yang rusak dari dalam).\n\nSelama proses perbaikan sel berjalan 1–3 bulan ke depan, obat dokter tetap diminum dengan jeda 1–2 jam. Begitu fungsi organ dalamnya sudah pulih dan hasil lab membaik, *dokter ${s} sendiri yang nanti akan menurunkan dosis obatnya secara bertahap dan aman*.`;
+                }
+            },
+            {
+                id: 'qa_dokter_aman',
+                shortBtn: '2. "Kata dokter obat medis aman diminum seumur hidup & tidak merusak ginjal?"',
+                title: 'Menjawab: "Kata dokter aman kok minum obat diabetes/tensi seumur hidup?"',
+                hint: 'Setujui pernyataan dokter 100% dulu agar pasien respek, lalu buka logika medis "Kuda yang Dipecut" (kenapa dosis selalu naik) dan batas fungsi saringan ginjal (eGFR).',
+                generate: function(s, name) {
+                    return `Apa yang disampaikan dokter ${s}${name} itu *100% benar secara medis*. Dokter menyampaikan demikian agar pasien tidak takut lalu nekat berhenti minum obat sendiri—sebab jika obat dilepas mendadak lalu gula darah atau tensi melonjak tinggi, darah yang kental dan tekanan tinggi itulah yang paling cepat merusak saringan ginjal.\n\nNamun ada *2 fakta medis* yang perlu kita cermati bersama:\n1. *Kenapa dosis obat pasien jarang berkurang, malah makin tahun makin bertambah (dari 1 butir menjadi beberapa macam obat hingga suntik insulin)?* Karena pankreas atau pembuluh darah yang sakit ibarat *kuda yang sedang kelelahan*. Sebagian obat bekerja "memecut" organ tersebut agar terus bekerja paksa. Jika terus dipecut bertahun-tahun tanpa diberi nutrisi perbaikan sel, lama-kelamaan organnya aus.\n2. *Aturan Medis Ginjal (eGFR):* Obat medis memang aman *selama fungsi ginjal masih 100% sehat*. Namun dalam pedoman kedokteran sendiri, jika nilai saringan ginjal (eGFR) mulai turun ke batas tertentu, dokter wajib menghentikan obat tertentu (seperti Metformin) karena ginjal tidak sanggup lagi membuang sisa metabolisme obat tersebut.\n\nDi sinilah fungsi nutrisi peptida AFC: *memberi makan dan meremajakan kembali sel organ serta melindungi hati dan ginjal*, supaya pengobatan dokter berhasil optimal dan organ dalam ${s} tetap awet.`;
+                }
+            },
+            {
+                id: 'qa_harga_mahal',
+                shortBtn: '3. "Harganya mahal sekali (Rp 1,8 - 2 Juta), takut tidak ada hasil?"',
+                title: 'Menjawab: "Harganya lumayan mahal ya, bagaimana kalau tidak cocok?"',
+                hint: 'Bandingkan biaya pencegahan vs biaya komplikasi rumah sakit, jelaskan kemurnian standar farmasi Jepang, dan berikan opsi mulai 1 box atau paket hemat Reseller.',
+                generate: function(s, name) {
+                    return `Saya sangat memahami pertimbangan ${s}${name}. Nominal Rp 1,8 juta – Rp 2 juta per box memang terasa cukup besar jika dibandingkan vitamin biasa.\n\nNamun jika kita lihat secara objektif dari sisi medis:\n1. *Standar Farmasi Jepang (Terdaftar di MIMS Dokter):* Yang ${s} konsumsi bukan sekadar herbal biasa, melainkan konsentrat *Bioactive Oligopeptide* murni dari AFC-HD AMS Jepang yang bekerja langsung di tingkat regenerasi sel dan sirkulasi mikro.\n2. *Jauh Lebih Ringan Dibanding Risiko Komplikasi:* Pada keluhan menahun, biaya yang paling besar sebenarnya adalah jika terjadi komplikasi lebih lanjut di rumah sakit. Berinvestasi sekitar Rp 65.000-an per sachet untuk menjaga fungsi ginjal, jantung, saraf, dan pembuluh darah jauh lebih hemat dan menenangkan bagi keluarga.\n\nJika ingin mencoba respons tubuh terlebih dahulu, ${s}${name} tidak harus langsung membeli banyak—bisa *mulai dari 1 Box produk prioritas utama* dulu untuk terapi awal, atau mengambil *Paket 2 Box (Otomatis Terdaftar Member Reseller)* agar pembelian berikutnya mendapat potongan cashback resmi.`;
+                }
+            },
+            {
+                id: 'qa_aman_ginjal',
+                shortBtn: '4. "Apakah benar-benar aman untuk ginjal yang sudah lemah / cuci darah?"',
+                title: 'Menjawab: "Apakah suplemen ini tidak memperberat ginjal saya?"',
+                hint: 'Jelaskan perbedaan protein/herbal kasar vs Oligopeptida ukuran nano (<500 Dalton) yang langsung diserap tanpa membebani filtrasi ginjal, serta cara konsumsi tabur bawah lidah (hemat air).',
+                generate: function(s, name) {
+                    return `Sangat aman ${s}${name}. Justru alasan utama banyak pasien gangguan ginjal menggunakan nutrisi AFC adalah karena teknologi ekstraksinya berbeda jauh dengan suplemen protein atau jamu/herbal biasa.\n\n• *Ukuran Molekul Nano (Low-Molecular-Weight Peptide):* Suplemen biasa memiliki molekul besar sehingga menyisakan ampas yang harus disaring keras oleh ginjal. Sedangkan peptida AFC sudah dipecah secara enzimatik menjadi ukuran sangat kecil sehingga *langsung terserap masuk ke pembuluh darah tanpa memperberat saringan glomerulus ginjal*.\n• *Bisa Dikonsumsi Tanpa Banyak Air (Sublingual):* Bagi pasien yang dibatasi kuota minum air hariannya oleh dokter, serbuk halus AFC cukup *ditabur langsung di bawah lidah* (biarkan larut bersama air liur) atau diseduh dengan 2–3 sendok makan air putih saja.\n• *Tujuan Medisnya:* Menjaga sisa sel ginjal yang masih sehat agar tidak ikut rusak, menstabilkan tensi, dan memulihkan tenaga pasien agar tidak mudah lemas/pucat.`;
+                }
+            },
+            {
+                id: 'qa_waktu_hasil',
+                shortBtn: '5. "Berapa lama baru terasa khasiatnya & bagaimana aturan minumnya?"',
+                title: 'Menjawab: "Berapa lama kelihatan hasilnya dan bagaimana cara konsumsinya?"',
+                hint: 'Berikan ekspektasi medis yang jujur (Fase adaptasi 2-4 minggu vs Siklus regenerasi sel darah merah 90-120 hari) agar pasien percaya dan siap repeat order.',
+                generate: function(s, name) {
+                    return `Secara medis, karena produk AFC bekerja memperbaiki sel dari akarnya (bukan obat kimia pereda gejala sesaat), proses di dalam tubuh berlangsung secara bertahap dan terukur ${s}${name}:\n\n• *2 hingga 4 Minggu Pertama (1 Box Awal):* Fokus pada pelancaran sirkulasi darah mikro, pembuangan toksin, perbaikan kualitas tidur, dan pemulihan energi seluler (badan terasa lebih segar dan tidak gampang drop).\n• *Bulan ke-2 hingga ke-3 (Siklus 90–120 Hari):* Mengikuti siklus pergantian sel darah merah dan regenerasi jaringan tubuh manusia, di fase inilah perbaikan fungsi organ biasanya mulai terlihat nyata pada hasil cek laboratorium dokter.\n\n*Cara Konsumsi yang Tepat:*\nDiminum *2 sachet sehari* saat perut kosong (1 sachet pagi bangun tidur & 1 sachet sore hari), ditabur di bawah lidah atau diseduh air putih suhu normal. Beri *jeda 1–2 jam* dengan obat dokter.`;
+                }
+            },
+            {
+                id: 'qa_beda_apotek',
+                shortBtn: '6. "Apa bedanya dengan suplemen kolagen/herbal biasa di apotek atau marketplace?"',
+                title: 'Menjawab: "Apa bedanya dengan suplemen biasa atau yang murah di marketplace?"',
+                hint: 'Tekankan 3 keunggulan: Pabrik Farmasi Publik tertua Jepang (AFC), terdaftar di MIMS (referensi resmi dokter di Indonesia), dan peringatan bahaya barang palsu di marketplace.',
+                generate: function(s, name) {
+                    return `Ada 3 perbedaan mendasar secara medis ${s}${name}:\n\n1. *Terdaftar di MIMS (Referensi Resmi Dokter & Rumah Sakit):* Produk AFC diproduksi oleh perusahaan farmasi publik tertua di Jepang (*AFC-HD AMS Life Science*), sudah berizin *BPOM RI, Halal*, dan tercatat di *MIMS*—artinya profil keamanannya jelas dan diakui secara medis untuk mendampingi pengobatan dokter.\n2. *Teknologi Bioactive Peptide vs Herbal Biasa:* Vitamin atau herbal biasa sering kali rusak saat terkena asam lambung. Peptida AFC dirancang dengan teknologi hidrolisis enzimatik Jepang sehingga daya serapnya ke sel target jauh lebih tinggi.\n3. *Jaminan Keaslian Resmi:* AFC Jepang melarang keras penjualan di marketplace (Shopee/Tokopedia/TikTok) karena banyaknya produk tiruan/oplosan yang dipotong barcodenya. Melalui distribusi resmi kami (*Haidir — Official Distributor Makassar*), produk yang ${s} terima *100% bergaransi asli segel pabrik Jepang* dan aman bagi organ tubuh.`;
+                }
+            },
+            {
+                id: 'qa_hepatitis_b',
+                shortBtn: '7. "Untuk Hepatitis B & SGOT/SGPT tinggi, bagaimana cara kerja produk ini?"',
+                title: 'Menjawab: "Bagaimana cara Utsukushhii & Subarashi membantu keluhan Hepatitis B / Liver?"',
+                hint: 'Jelaskan sinergi imunologi NK Cells (menidurkan virus & mencegah kanker hati) + Hepatoprotection (menurunkan SGOT/SGPT & mencegah pengerasan hati/sirosis).',
+                generate: function(s, name) {
+                    return `Untuk keluhan *Hepatitis B* maupun peningkatan enzim hati (*SGOT/SGPT*), target medis kita ada dua: *menekan aktivitas virusnya* dan *mencegah jaringan hati mengeras (sirosis)*.\n\nKombinasi *Utsukushhii Gold* dan *SOP Subarashi Gold* bekerja saling melengkapi:\n1. *Mengaktifkan Tentara Imun Alami (Utsukushhii Gold):* Cara tubuh manusia menjaga agar virus Hepatitis tetap "tidur" (inaktif) di dalam sel hepatosit hati adalah melalui keaktifan *Natural Killer (NK) Cells* dan *Interferon* alami. Utsukushhii Gold mengaktifkan tentara imun tersebut sekaligus menyapu sel-sel hati abnormal agar tidak berkembang menjadi tumor/kanker hati.\n2. *Melindungi & Meregenerasi Sel Hati (SOP Subarashi Gold):* Bekerja sebagai *hepatoprotector* (pelindung hati) yang meredakan peradangan sel hati, membantu menurunkan angka SGOT/SGPT, dan mempercepat pembentukan sel-sel hati baru yang sehat.\n\nObat antivirus dari dokter tetap diminum sesuai jadwal ya ${s}${name}, cukup beri jeda 1–2 jam.`;
+                }
+            },
+            {
+                id: 'qa_rincian_paket',
+                shortBtn: '8. "Berapa rincian harganya & bagaimana cara pesan / bisa COD?"',
+                title: 'Menjawab: "Berapa harganya per box dan bagaimana cara pemesanannya?"',
+                hint: 'Berikan rincian harga resmi, keuntungan langsung menjadi Member Reseller (2 Box), dan kemudahan pengiriman COD PosPay / transfer resmi.',
+                generate: function(s, name, ctx) {
+                    const pSuba = formatRp(ctx.prices.SUBARASHI);
+                    const pUtsu = formatRp(ctx.prices.UTSUKUSHHII);
+                    const pHika = formatRp(ctx.prices.HIKARI);
+                    const priceNote = !ctx.isDecPrice
+                        ? `\n_(Catatan: Harga saat ini masih harga sebelum penyesuaian resmi tanggal 14 Desember 2026)_`
+                        : '';
+                    return `Berikut rincian harga resmi pabrik *AFC Lifescience Jepang* per box (untuk konsumsi sekitar 2 minggu pada dosis terapi 2 sachet/hari) ${s}${name}:\n\n• *SOP Subarashi Gold* (28 Sachet): *${pSuba} / box*\n• *Utsukushhii Gold* (28 Sachet): *${pUtsu} / box*\n• *AFC Hikari* (30 Sachet): *${pHika} / box*${priceNote}\n\n💡 *Opsi Pemesanan:*\n1. *Mulai 1 Box Prioritas:* Cocok untuk melihat respons awal tubuh selama 2–4 minggu pertama.\n2. *Paket Hemat Member Reseller (2 Box — Bebas Pilih Produk):* Langsung terdaftar memiliki *ID Member Resmi AFC* atas nama ${s} sendiri, sehingga untuk pembelian berikutnya langsung mendapatkan potongan *cashback* member yang jauh lebih hemat.\n\n📦 *Pengiriman & Pembayaran:*\nKami melayani pengiriman cepat ke seluruh Indonesia (termasuk layanan *Bayar di Tempat / COD Resmi via PosPay*). Kira-kira ${s}${name} ingin mulai dengan *1 Box* dulu atau langsung *Paket Hemat 2 Box*?`;
+                }
+            }
+        ];
+
+        // 3. ARSIP INTERNAL 21 PATEN (HANYA UNTUK TAB REFERENSI HAIDIR)
+        const PATENTS_ARCHIVE = [
+            { prod: 'SOP Subarashi Gold', code: 'JP3946238B1', fn: 'Efek Regenerasi Sel (IGF-1)', ing: 'Salmon Ovary Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'JP3946239B1', fn: 'Perbaikan Sirkulasi & Pembuluh Darah', ing: 'Salmon Ovary Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'JPWO2003055901A1', fn: 'Agen Anti-Hipertensi (Penurun Tensi Alami)', ing: 'Sardine Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'JP2009538895A', fn: 'Anti-Trombosis (Mencegah Penggumpalan Darah)', ing: 'Fruitflow® Vegan Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'JP5641734B2', fn: 'Dediferensiasi / Peremajaan Sel Tua', ing: 'Salmon Caviar Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'JP3899116B1', fn: 'Anti-Aging Kolagen & Elastin Sendi/Kulit', ing: 'Salmon Ovary & Caviar Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'JP4247444B2', fn: 'Hepatoprotection (Perlindungan Fungsi Hati)', ing: 'Caviar & Tuna Heart Peptide' },
+            { prod: 'SOP Subarashi Gold', code: 'CN108559764B', fn: 'Penurunan Kadar Asam Urat (Anti-Gout)', ing: 'Salmon Anserine Peptide' },
+            { prod: 'Utsukushhii Gold', code: 'JP3040711B2', fn: 'Agen Anti-Tumor (Aktivasi NK Cells)', ing: 'Lactic Acid Bacteria FK-23 & Fucoidan' },
+            { prod: 'Utsukushhii Gold', code: 'JP3272023B2', fn: 'Aktivasi Imunitas & Peningkatan Leukosit', ing: 'Lactic Acid Bacteria (1 Triliun CFU)' },
+            { prod: 'Utsukushhii Gold', code: 'JP2712000B2', fn: 'Agen Terapi Hepatitis & Pemulihan Hati', ing: 'Lactic Acid Bacteria & L-Glutathione' },
+            { prod: 'Utsukushhii Gold', code: 'JP2969017B2', fn: 'Pelindung Infeksi Bakteri & Virus', ing: 'Bifidobacterium longum & Vitamin D' },
+            { prod: 'Utsukushhii Gold', code: 'JP5635690B2', fn: 'Supresi Pertumbuhan Tumor & Kurangi Efek Kemo', ing: 'Probiotic Microvesicles & Black Garlic' },
+            { prod: 'Utsukushhii Gold', code: 'US7048953B2', fn: 'Proteksi Infeksi Saluran Pernapasan Akut', ing: 'Takara Kombu Fucoidan' },
+            { prod: 'Utsukushhii Gold', code: 'JP5697788B1', fn: 'Proteksi Radikal Bebas (Anti-ROS)', ing: 'Marine Lactic Acid Bacteria & Black Garlic' },
+            { prod: 'Utsukushhii Gold', code: 'JP3040699B2', fn: 'Pengurang Racun Darah & Pelindung Ginjal Obat Keras', ing: 'Enterococcus faecalis NF-1011' },
+            { prod: 'AFC Hikari', code: 'US20130231297A1', fn: 'Meningkatkan Performa Visual & Ketajaman Mata', ing: 'Marigold Peptide (Lutein & Zeaxanthin)' },
+            { prod: 'AFC Hikari', code: 'US9226940B2', fn: 'Proteksi Retina Mata dari Radiasi Blue Light', ing: 'FloraGLO® Marigold Peptide' },
+            { prod: 'AFC Hikari', code: 'EP2498765A1', fn: 'Memperbaiki Memori & Kognitif Otak', ing: 'Marigold & Spearmint Peptide' },
+            { prod: 'AFC Hikari', code: 'US10537604B2', fn: 'Meningkatkan Fokus & Aktivitas Sinapsis Otak', ing: 'Mango Leaf Peptide (Zynamite®)' },
+            { prod: 'AFC Hikari', code: 'EP3538085B1', fn: 'Meningkatkan Laju Neurogenesis (Sel Saraf Baru)', ing: 'Spearmint Peptide (Neumentix™)' }
+        ];
+
+        // STATE
+        let selectedChips = new Set(['diabetes']);
+        let activeQaId = 'qa_tetap_obat';
+
+        function formatRp(n) {
+            return 'Rp ' + Number(n).toLocaleString('id-ID');
+        }
+
+        function getCtx() {
+            const salutation = document.getElementById('inp-salutation')?.value || 'Bapak/Ibu';
+            const rawName = (document.getElementById('inp-name')?.value || '').trim();
+            const name = rawName ? ' ' + rawName : '';
+            const phone = (document.getElementById('inp-phone')?.value || '').trim();
+            const isDecPrice = document.getElementById('inp-price-dec')?.checked || false;
+
+            const modeLabel = document.getElementById('price-mode-text');
+            if (modeLabel) {
+                modeLabel.textContent = isDecPrice ? 'Harga Baru (Mulai 14 Des 2026)' : 'Harga Saat Ini (Sblm 14 Des)';
+            }
+
+            const prices = {
+                SUBARASHI: isDecPrice ? 2050000 : 2000000,
+                UTSUKUSHHII: isDecPrice ? 1900000 : 1850000,
+                HIKARI: 1800000
+            };
+
+            return { salutation, rawName, name, phone, isDecPrice, prices };
+        }
+
+        // SWITCH MAIN vs REFERENCE VIEW
+        function switchView(view) {
+            const mainEl = document.getElementById('view-main');
+            const refEl = document.getElementById('view-ref');
+            const btnMain = document.getElementById('btn-view-main');
+            const btnRef = document.getElementById('btn-view-ref');
+
+            if (view === 'main') {
+                mainEl.classList.remove('hidden');
+                refEl.classList.add('hidden');
+                btnMain.classList.add('nav-active');
+                btnRef.classList.remove('nav-active');
+            } else {
+                mainEl.classList.add('hidden');
+                refEl.classList.remove('hidden');
+                btnRef.classList.add('nav-active');
+                btnMain.classList.remove('nav-active');
+            }
+        }
+
+        // RENDER SYMPTOM CHIPS
+        function renderChips() {
+            const box = document.getElementById('symptom-chips');
+            if (!box) return;
+            box.innerHTML = CONDITIONS.map(c => {
+                const active = selectedChips.has(c.id);
+                return `<button type="button" onclick="toggleChip('${c.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl border transition ${
+                    active ? 'chip-active' : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100'
+                }">${c.chip} ${active ? '✓' : '+'}</button>`;
+            }).join('');
+        }
+
+        function toggleChip(id) {
+            if (selectedChips.has(id)) {
+                selectedChips.delete(id);
+            } else {
+                selectedChips.add(id);
+            }
+            renderChips();
+            updateAll();
+        }
+
+        // LOAD SAMPLE COMPLAINTS
+        function loadSample(num) {
+            const inp = document.getElementById('complaint-input');
+            selectedChips.clear();
+            if (num === 1) {
+                inp.value = 'Siang pak Haidir, gula darah bapak saya 290, telapak kaki sering kesemutan/kebas dan badan gampang lemas. Sekarang rutin minum obat metformin dari dokter.';
+                selectedChips.add('diabetes');
+                selectedChips.add('saraf_kebas');
+            } else if (num === 2) {
+                inp.value = 'Pak, ibu saya ada gagal ginjal kreatinin 3.4 belum cuci darah, tensi 170 dan ada riwayat diabetes juga. Produk apa yang aman untuk ginjalnya?';
+                selectedChips.add('ginjal');
+                selectedChips.add('hipertensi');
+                selectedChips.add('diabetes');
+                activeQaId = 'qa_aman_ginjal';
+            } else if (num === 3) {
+                inp.value = 'Halo pak, untuk pemulihan pasca stroke sumbatan 2 bulan lalu, tangan dan kaki kiri masih lemas dan bicara agak pelo, sebaiknya pakai apa?';
+                selectedChips.add('stroke');
+                activeQaId = 'qa_waktu_hasil';
+            } else if (num === 4) {
+                inp.value = 'Selamat pagi, saya ada keluhan Hepatitis B dan hasil cek lab SGOT SGPT tinggi, badan cepat capek. Apakah bisa dibantu dengan produk AFC?';
+                selectedChips.add('hepatitis');
+                activeQaId = 'qa_hepatitis_b';
+            }
+            renderChips();
+            updateAll();
+        }
+
+        function resetInput() {
+            const inp = document.getElementById('complaint-input');
+            if (inp) inp.value = '';
+            selectedChips.clear();
+            renderChips();
+            updateAll();
+        }
+
+        // DETECT CONDITIONS FROM TEXT + CHIPS
+        function getDetectedConditions() {
+            const text = (document.getElementById('complaint-input')?.value || '').toLowerCase();
+            let matched = [];
+
+            CONDITIONS.forEach(c => {
+                const byChip = selectedChips.has(c.id);
+                const byText = c.keywords.some(k => text.includes(k));
+                if (byChip || byText) {
+                    matched.push(c);
+                }
+            });
+
+            // Auto-switch QA tab if user pasted an objection keyword directly
+            if (text.includes('percuma') || text.includes('tetap minum obat')) {
+                activeQaId = 'qa_tetap_obat';
+            } else if (text.includes('kata dokter') || text.includes('seumur hidup')) {
+                activeQaId = 'qa_dokter_aman';
+            } else if (text.includes('mahal') || text.includes('biaya')) {
+                activeQaId = 'qa_harga_mahal';
+            }
+
+            return matched;
+        }
+
+        // GENERATE CARD 1, CARD 2, AND CARD 3
+        function updateAll() {
+            const ctx = getCtx();
+            const s = ctx.salutation;
+            const name = ctx.name;
+            const matched = getDetectedConditions();
+
+            // Badge count
+            const countBadge = document.getElementById('detected-count-badge');
+            if (countBadge) {
+                countBadge.textContent = matched.length > 0 ? `${matched.length} Kondisi Terdeteksi` : 'Keluhan Umum';
+            }
+
+            // Determine Primary & Companion Products
+            let primarySet = new Set();
+            let companionSet = new Set();
+
+            if (matched.length === 0) {
+                primarySet.add('SUBARASHI');
+            } else {
+                matched.forEach(m => {
+                    m.products.forEach(p => primarySet.add(p));
+                    m.companion.forEach(cp => companionSet.add(cp));
+                });
+                primarySet.forEach(p => companionSet.delete(p));
+            }
+
+            // Update Summary Bar
+            const sumEl = document.getElementById('detected-summary');
+            const prodEl = document.getElementById('product-summary');
+            const prodNames = {
+                SUBARASHI: { name: 'SOP Subarashi Gold', cls: 'bg-blue-600 text-white' },
+                UTSUKUSHHII: { name: 'Utsukushhii Gold', cls: 'bg-purple-600 text-white' },
+                HIKARI: { name: 'AFC Hikari', cls: 'bg-amber-400 text-slate-950' }
+            };
+
+            if (sumEl) {
+                if (matched.length === 0) {
+                    sumEl.innerHTML = `<span class="text-slate-300">Ketik/pilih keluhan pasien untuk menyesuaikan respon medis otomatis.</span>`;
+                } else {
+                    sumEl.innerHTML = `<span class="text-slate-400 font-bold">Fokus Keluhan:</span>` +
+                        matched.map(m => `<span class="px-2 py-0.5 rounded bg-slate-800 text-teal-300 border border-slate-700 font-semibold">${m.label}</span>`).join('');
+                }
+            }
+
+            if (prodEl) {
+                let html = '';
+                primarySet.forEach(k => {
+                    html += `<span class="px-2.5 py-0.5 rounded font-extrabold ${prodNames[k].cls}">Saran Utama: ${prodNames[k].name}</span>`;
+                });
+                companionSet.forEach(k => {
+                    html += `<span class="px-2 py-0.5 rounded font-semibold bg-slate-700 text-slate-200">+ Pendamping: ${prodNames[k].name}</span>`;
+                });
+                prodEl.innerHTML = html;
+            }
+
+            // =================================================================
+            // BUILD CARD 1: SHORT, WARM, TO-THE-POINT OPENING RESPONSE
+            // =================================================================
+            let card1Text = '';
+            if (matched.length === 0) {
+                card1Text = `Halo ${s}${name}, salam sehat. Saya Haidir dari layanan konsultasi resmi AFC Jepang. 🙏\n\nKeluhan tubuh yang mudah lemas atau menurunnya fungsi organ umumnya menandakan sirkulasi darah mikro yang mulai kurang lancar serta melambatnya regenerasi sel tubuh.\n\nAgar saran nutrisi pendampingnya benar-benar tepat sasaran secara medis, boleh diinfokan saat ini keluhan utama apa yang paling dirasakan dan apakah ada obat dokter yang sedang rutin dikonsumsi, ${s}?`;
+            } else if (matched.length === 1) {
+                const c = matched[0];
+                card1Text = `Halo ${s}${name}, salam sehat. Saya turut prihatin mendengar keluhan ${c.openingFocus} yang sedang dialami. 🙏\n\nJika saat ini ada obat rutin dari dokter, mohon *tetap dilanjutkan dan jangan dihentikan mendadak* ya ${s}. Secara medis, ${c.rootCauseBrief}\n\n${c.followUpQuestion}`;
+            } else {
+                const focusList = matched.map(m => m.openingFocus).join(' disertai ');
+                const hasKidney = matched.some(m => m.id === 'ginjal');
+                const followQ = hasKidney
+                    ? 'Kalau boleh tahu, untuk fungsi ginjalnya saat ini masih terapi obat jalan atau sudah cuci darah, dan berapa angka kreatinin/gula darah terakhirnya?'
+                    : matched[0].followUpQuestion;
+
+                card1Text = `Halo ${s}${name}, salam sehat. Saya memahami kekhawatiran ${s} terkait kondisi ${focusList} yang sedang dialami. 🙏\n\nUntuk obat rutin dari dokter mohon *tetap diminum sesuai jadwal* ya ${s}, karena ketiga kondisi tersebut saling berkaitan di dalam pembuluh darah. Obat medis menjaga agar angka klinis harian tetap terkontrol, namun sel organ dan pembuluh darah yang rusak di hulunya tetap membutuhkan nutrisi regenerasi sel agar tidak semakin menurun.\n\n${followQ}`;
+            }
+
+            const c1El = document.getElementById('out-card-1');
+            if (c1El) {
+                c1El.value = card1Text;
+                updateCounter('out-card-1', 'meta-card-1');
+            }
+
+            // =================================================================
+            // BUILD CARD 2: SCIENTIFIC PRODUCT RECOMMENDATION (NO PATENT CODES)
+            // =================================================================
+            let card2Lines = [];
+            const titleSummary = matched.length > 0
+                ? matched.map(m => `*${m.label}*`).join(' & ')
+                : '*Perbaikan Sirkulasi & Regenerasi Sel Tubuh*';
+
+            card2Lines.push(`Untuk mendampingi pemulihan ${titleSummary} secara medis dan aman dari dalam, berikut adalah nutrisi seluler berstandar farmasi *AFC Jepang* (terdaftar di BPOM, Halal & referensi dokter MIMS) yang paling tepat untuk kondisi ${s}${name}:`);
+
+            if (matched.length > 0) {
+                // Combine unique product explanations cleanly without repeating the same product paragraph twice
+                let expBlocks = [];
+                if (primarySet.has('SUBARASHI') || companionSet.has('SUBARASHI')) {
+                    let subaReasons = [];
+                    if (matched.some(m => m.id === 'diabetes')) subaReasons.push('memulihkan sel Beta Pankreas yang lelah agar pengolahan gula darah membaik secara alami');
+                    if (matched.some(m => m.id === 'ginjal')) subaReasons.push('memperbaiki aliran darah halus di saringan nefron ginjal dan menjaga sisa sel ginjal yang masih sehat tanpa memperberat beban ginjal');
+                    if (matched.some(m => m.id === 'hipertensi' || m.id === 'stroke' || m.id === 'saraf_kebas')) subaReasons.push('melenturkan dinding pembuluh darah yang kaku serta menjaga darah tetap encer alami (mencegah penyumbatan)');
+                    if (matched.some(m => m.id === 'hepatitis')) subaReasons.push('melindungi sel-sel hati (hepatoprotector) dan mempercepat regenerasi jaringan hati yang meradang agar SGOT/SGPT turun');
+                    if (matched.some(m => m.id === 'asam_urat')) subaReasons.push('membantu peluruhan kristal asam urat di darah serta memulihkan bantalan kolagen sendi');
+                    if (subaReasons.length === 0) subaReasons.push('meregenerasi sel-sel organ vital yang rusak dan melancarkan sirkulasi darah mikro');
+
+                    expBlocks.push(`1️⃣ *SOP Subarashi Gold (Fokus Regenerasi Organ & Pembuluh Darah):*\nMengandung konsentrat *6 Bioactive Oligopeptide* (termasuk *Marine Placenta, Sardine Peptide, & Fruitflow*) berukuran nano yang bekerja langsung ${subaReasons.join(', ')}, sekaligus mengamankan organ hati dan ginjal dari residu konsumsi obat kimia harian.`);
+                }
+
+                if (primarySet.has('UTSUKUSHHII') || companionSet.has('UTSUKUSHHII')) {
+                    let utsuReasons = [];
+                    if (matched.some(m => m.id === 'hepatitis')) utsuReasons.push('mengaktifkan sel imun *Natural Killer (NK Cells)* dan *Interferon* alami untuk menekan aktivitas virus Hepatitis di sel hati');
+                    if (matched.some(m => m.id === 'tumor_kanker')) utsuReasons.push('mengaktifkan *NK Cells* untuk mendeteksi dan menekan pertumbuhan sel benjolan/kista/tumor serta menjaga sel darah putih (leukosit)');
+                    if (matched.some(m => m.id === 'ginjal')) utsuReasons.push('membantu mengikat dan membuang zat toksin metabolik melalui saluran cerna sehingga meringankan beban racun di darah');
+                    if (matched.some(m => m.id === 'pencernaan')) utsuReasons.push('membersihkan toksin di mukosa usus, meredakan peradangan lambung (GERD), dan menyeimbangkan imunitas tubuh');
+                    if (utsuReasons.length === 0) utsuReasons.push('mengoptimalkan detoksifikasi racun di usus/darah dan menguatkan sistem pertahanan imun seluler');
+
+                    const numIcon = expBlocks.length === 0 ? '1️⃣' : '2️⃣';
+                    expBlocks.push(`${numIcon} *Utsukushhii Gold (Fokus Imunitas NK-Cells & Detoksifikasi):*\nMengandung *1 Triliun CFU Probiotik FK-23, Takara Kombu Fucoidan, & Black Garlic* yang terbukti secara klinis ${utsuReasons.join(' serta ')}.`);
+                }
+
+                if (primarySet.has('HIKARI') || companionSet.has('HIKARI')) {
+                    let hikaReasons = [];
+                    if (matched.some(m => m.id === 'stroke' || m.id === 'saraf_kebas' || m.id === 'anak_abk')) hikaReasons.push('merangsang *neurogenesis* (pertumbuhan dan penyambungan kembali sel-sel saraf/neuron yang rusak atau melemah)');
+                    if (matched.some(m => m.id === 'mata' || m.id === 'diabetes')) hikaReasons.push('menutrisi pigmen makula retina mata secara langsung untuk memperjelas penglihatan yang kabur dan melindungi saraf mata');
+                    if (hikaReasons.length === 0) hikaReasons.push('memperbaiki fungsi sistem saraf pusat dan melindungi kesehatan retina mata');
+
+                    const numIcon = expBlocks.length === 0 ? '1️⃣' : (expBlocks.length === 1 ? '2️⃣' : '3️⃣');
+                    expBlocks.push(`${numIcon} *AFC Hikari (Fokus Perbaikan Saraf & Retina Mata):*\nMenggunakan *Triple Vegan Peptide (Spearmint, Mango Leaf, & Marigold Lutein)* yang bekerja menembus sawar darah otak untuk ${hikaReasons.join(' sekaligus ')}.`);
+                }
+
+                card2Lines.push(expBlocks.join('\n\n'));
+            } else {
+                card2Lines.push(`• *SOP Subarashi Gold:* Mengandung *Bioactive Marine Oligopeptide* berukuran nano yang bekerja meregenerasi sel-sel organ yang mulai menurun fungsinya, melenturkan pembuluh darah, menjaga kelancaran aliran oksigen, serta melindungi fungsi hati dan ginjal.`);
+            }
+
+            const isKidneyCase = matched.some(m => m.id === 'ginjal');
+            const caraMinum = isKidneyCase
+                ? `*Aturan Minum (Aman untuk Batasan Cairan):* Cukup ditabur langsung di bawah lidah (*sublingual*) atau diseduh dengan sedikit air putih biasa (50 ml), *2 sachet sehari* (pagi & sore saat perut kosong). Obat dokter tetap diminum dengan *jeda 1–2 jam*.`
+                : `*Aturan Minum:* Konsumsi *2 sachet sehari* (1 pagi bangun tidur & 1 sore saat perut kosong), ditabur di bawah lidah atau diseduh air putih suhu normal. Obat dokter tetap dilanjutkan dengan *jeda 1–2 jam*.`;
+
+            card2Lines.push(caraMinum);
+
+            const c2El = document.getElementById('out-card-2');
+            if (c2El) {
+                c2El.value = card2Lines.join('\n\n');
+                updateCounter('out-card-2', 'meta-card-2');
+            }
+
+            // =================================================================
+            // BUILD CARD 3: ANTICIPATED QUESTIONS & OBJECTIONS
+            // =================================================================
+            renderQaSection(matched, ctx);
+            renderCalc();
+            renderPatentTable();
+        }
+
+        function renderQaSection(matched, ctx) {
+            const btnList = document.getElementById('qa-buttons-list');
+            if (!btnList) return;
+
+            // Collect recommended QA IDs based on active conditions
+            let recSet = new Set();
+            matched.forEach(m => {
+                (m.recommendedQaIds || []).forEach(id => recSet.add(id));
+            });
+            if (recSet.size === 0) {
+                recSet.add('qa_tetap_obat');
+                recSet.add('qa_harga_mahal');
+                recSet.add('qa_rincian_paket');
+            }
+
+            btnList.innerHTML = ANTICIPATED_QA.map(qa => {
+                const isSelected = qa.id === activeQaId;
+                const isRec = recSet.has(qa.id);
+                let cls = 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100';
+                if (isRec && !isSelected) cls = 'qa-recommended text-slate-900';
+                if (isSelected) cls = 'qa-btn-active shadow';
+
+                return `<button type="button" onclick="selectQa('${qa.id}')" class="w-full text-left p-3 rounded-xl border text-xs font-bold transition flex items-center justify-between gap-2 ${cls}">
+                    <span>${qa.shortBtn}</span>
+                    ${isRec ? `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${isSelected ? 'bg-amber-400 text-slate-950' : 'bg-amber-200 text-amber-950'} flex-shrink-0">★ Disarankan</span>` : ''}
+                </button>`;
+            }).join('');
+
+            const currentQa = ANTICIPATED_QA.find(q => q.id === activeQaId) || ANTICIPATED_QA[0];
+            document.getElementById('qa-active-title').textContent = currentQa.title;
+            document.getElementById('qa-active-hint').textContent = '💡 Strategi Psikologis: ' + currentQa.hint;
+
+            const out3 = document.getElementById('out-card-3');
+            if (out3) {
+                out3.value = currentQa.generate(ctx.salutation, ctx.name, ctx);
+                updateCounter('out-card-3', 'meta-card-3');
+            }
+        }
+
+        function selectQa(id) {
+            activeQaId = id;
+            const ctx = getCtx();
+            const matched = getDetectedConditions();
+            renderQaSection(matched, ctx);
+        }
+
+        // UPDATE LINE / WORD COUNTER BADGE
+        function updateCounter(textareaId, badgeId) {
+            const ta = document.getElementById(textareaId);
+            const badge = document.getElementById(badgeId);
+            if (!ta || !badge) return;
+            const text = ta.value.trim();
+            const paragraphs = text ? text.split(/\n\s*\n/).length : 0;
+            const words = text ? text.split(/\s+/).length : 0;
+            badge.textContent = `${paragraphs} Paragraf • ${words} Kata (Pas di Layar HP)`;
+        }
+
+        // CALCULATOR LOGIC (VIEW 2)
+        function setCalc(suba, utsu, hika) {
+            document.getElementById('q-suba').value = suba;
+            document.getElementById('q-utsu').value = utsu;
+            document.getElementById('q-hika').value = hika;
+            renderCalc();
+        }
+
+        function chgBox(key, delta) {
+            const el = document.getElementById('q-' + key);
+            if (!el) return;
+            let v = parseInt(el.value || '0', 10) + delta;
+            if (v < 0) v = 0;
+            el.value = v;
+            renderCalc();
+        }
+
+        function renderCalc() {
+            const ctx = getCtx();
+            const qSuba = Math.max(0, parseInt(document.getElementById('q-suba')?.value || '0', 10));
+            const qUtsu = Math.max(0, parseInt(document.getElementById('q-utsu')?.value || '0', 10));
+            const qHika = Math.max(0, parseInt(document.getElementById('q-hika')?.value || '0', 10));
+            const dose = Math.max(1, parseInt(document.getElementById('q-dose')?.value || '2', 10));
+
+            const boxes = qSuba + qUtsu + qHika;
+            const sachets = (qSuba * 28) + (qUtsu * 28) + (qHika * 30);
+            const days = sachets > 0 ? Math.floor(sachets / dose) : 0;
+            const total = (qSuba * ctx.prices.SUBARASHI) + (qUtsu * ctx.prices.UTSUKUSHHII) + (qHika * ctx.prices.HIKARI);
+
+            let status = 'Paket Coba Eceran (1 Box)';
+            if (boxes >= 2 && boxes < 6) status = `Paket Member Reseller Resmi (${boxes} Box)`;
+            else if (boxes >= 6 && boxes < 12) status = `Paket Member Agen Resmi (${boxes} Box)`;
+            else if (boxes >= 12) status = `Paket Member Distributor Resmi (${boxes} Box)`;
+
+            let lines = [];
+            if (qSuba > 0) lines.push(`• *SOP Subarashi Gold*: ${qSuba} Box (${qSuba * 28} Sachet) = *${formatRp(qSuba * ctx.prices.SUBARASHI)}*`);
+            if (qUtsu > 0) lines.push(`• *Utsukushhii Gold*: ${qUtsu} Box (${qUtsu * 28} Sachet) = *${formatRp(qUtsu * ctx.prices.UTSUKUSHHII)}*`);
+            if (qHika > 0) lines.push(`• *AFC Hikari*: ${qHika} Box (${qHika * 30} Sachet) = *${formatRp(qHika * ctx.prices.HIKARI)}*`);
+            if (lines.length === 0) lines.push('• _Pilih minimal 1 box produk_');
+
+            const text = `Halo ${ctx.salutation}${ctx.name}, berikut rincian paket terapi nutrisi *AFC Lifescience Jepang*:\n\n📦 *${status}:*\n${lines.join('\n')}\n\n• *Total Isi:* ${sachets} Sachet (Untuk konsumsi *${days} Hari* @ ${dose} sachet/hari)\n• *Total Biaya:* *${formatRp(total)}*\n\n✅ *Garansi & Layanan Resmi:*\n• 100% Produk Original Segel Pabrik AFC Jepang.\n• ${boxes >= 2 ? `Gratis pendaftaran *ID Member Resmi* atas nama ${ctx.salutation} sendiri (berhak mendapat cashback untuk pembelian selanjutnya).` : `Bisa mengambil 2 Box jika ingin sekalian terdaftar *ID Member Reseller Resmi*.`}\n• Tersedia layanan pengiriman cepat & *Bayar di Tempat (COD Resmi via PosPay)*.\n\n*Haidir — Official Distributor AFC (085175237688)*`;
+
+            const out = document.getElementById('out-calc');
+            if (out) out.value = text;
+        }
+
+        // RENDER INTERNAL PATENT ARCHIVE (VIEW 2)
+        function renderPatentTable() {
+            const q = (document.getElementById('ref-search')?.value || '').toLowerCase();
+            const grid = document.getElementById('patent-ref-grid');
+            if (!grid) return;
+
+            const filtered = PATENTS_ARCHIVE.filter(p =>
+                p.prod.toLowerCase().includes(q) ||
+                p.code.toLowerCase().includes(q) ||
+                p.fn.toLowerCase().includes(q) ||
+                p.ing.toLowerCase().includes(q)
+            );
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between gap-2">
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="text-[10px] font-extrabold uppercase text-teal-800 bg-teal-100 px-2 py-0.5 rounded">${p.prod}</span>
+                            <span class="text-xs font-mono font-bold text-slate-700">${p.code}</span>
+                        </div>
+                        <div class="text-xs font-extrabold text-slate-900 mt-1">${p.fn}</div>
+                        <div class="text-[11px] text-slate-600 mt-0.5">Kandungan: <strong>${p.ing}</strong></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // CLIPBOARD & WHATSAPP ACTIONS
+        function copyTextById(id, titleMsg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const str = el.value;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(str).then(() => {
+                    showToast(titleMsg);
+                }).catch(() => {
+                    fallbackCopy(str, titleMsg);
+                });
+            } else {
+                fallbackCopy(str, titleMsg);
+            }
+        }
+
+        function fallbackCopy(str, titleMsg) {
+            const ta = document.createElement('textarea');
+            ta.value = str;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast(titleMsg);
+            } catch (e) {
+                showToast('Silakan salin manual dari kotak teks');
+            }
+            document.body.removeChild(ta);
+        }
+
+        function sendWaById(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const text = el.value;
+            let rawPhone = (document.getElementById('inp-phone')?.value || '').replace(/[^0-9]/g, '');
+            if (rawPhone.startsWith('0')) rawPhone = '62' + rawPhone.slice(1);
+
+            const url = rawPhone
+                ? `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`
+                : `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        let toastTimeout = null;
+        function showToast(title) {
+            const t = document.getElementById('toast');
+            const tt = document.getElementById('toast-title');
+            if (!t || !tt) return;
+            tt.textContent = title || 'Tersalin!';
+            t.classList.remove('hidden');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                t.classList.add('hidden');
+            }, 2400);
+        }
+
+        // INIT ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            renderChips();
+            loadSample(1);
+        });
+    </script>
+</body>
+</html>
